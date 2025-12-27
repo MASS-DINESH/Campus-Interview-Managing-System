@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Admin Login</h2>
+    <form id="adminLoginForm">
+      <input type="text" id="admin_username" placeholder="Admin Username" required><br>
+      <input type="password" id="admin_password" placeholder="Admin Password" required><br>
+      <button type="submit">Login as Admin</button>
+      <br><br>
+      <button type="button" onclick="window.location.href='{{ url_for('index') }}'">User Login</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('adminLoginForm')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('admin_username').value.trim();
+      const password = document.getElementById('admin_password').value;
+
+      try {
+        const res = await fetch('/admin_auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          alert(data.message);
+          window.location.href = data.redirect;
+        } else {
+          alert(await res.text());
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
+  </script>
+</body>
+</html>

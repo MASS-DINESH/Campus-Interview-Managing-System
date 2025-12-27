@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login History - College Interview System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin_modern.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Notification badge in sidebar */
+    .nav-item {
+      position: relative;
+    }
+
+    .sidebar-notification-badge {
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      background: var(--gradient-danger);
+      color: white;
+      font-size: 11px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      border: 2px solid var(--primary);
+      box-shadow: 0 3px 10px rgba(231, 57, 70, 0.3);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* Enhanced user agent display */
+    .user-agent {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    /* Enhanced login details modal */
+    .modal-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .modal-detail-item {
+      background: rgba(248, 249, 250, 0.8);
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .modal-detail-label {
+      font-weight: 700;
+      color: var(--gray);
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .modal-detail-value {
+      font-size: 16px;
+      color: var(--dark);
+      font-weight: 600;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Sidebar Navigation -->
+    <div class="admin-sidebar">
+      <div class="sidebar-header">
+        <h2>College Interview System</h2>
+        <div class="admin-info">
+          <div class="admin-avatar">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <div class="admin-details">
+            <span class="admin-name">{{ username }}</span>
+            <span class="admin-role">Administrator</span>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
+          <i class="fas fa-th-large"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="{{ url_for('admin_user_management') }}" class="nav-item">
+          <i class="fas fa-users"></i>
+          <span>User Management</span>
+        </a>
+        <a href="{{ url_for('admin_job_requests') }}" class="nav-item">
+          <i class="fas fa-briefcase"></i>
+          <span>Job Requests</span>
+        </a>
+        <a href="{{ url_for('admin_login_details') }}" class="nav-item active">
+          <i class="fas fa-history"></i>
+          <span>Login History</span>
+        </a>
+        <!-- Notifications Menu Item -->
+        <a href="{{ url_for('admin_notifications') }}" class="nav-item">
+          <i class="fas fa-bell"></i>
+          <span>Support Tickets</span>
+          {% if unread_count and unread_count > 0 %}
+          <span class="sidebar-notification-badge">{{ unread_count }}</span>
+          {% endif %}
+        </a>
+        <a href="{{ url_for('logout') }}" class="nav-item logout">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+      <div class="admin-header">
+        <h1>Login History</h1>
+        <div class="header-actions">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search login history..." id="searchInput" onkeyup="searchLogins()">
+          </div>
+          <div class="filter-dropdown">
+            <select id="timeFilter" onchange="filterByTime()">
+              <option value="all">All Time</option>
+              <option value="30">Last 30 Days</option>
+              <option value="7">Last 7 Days</option>
+              <option value="1">Last 24 Hours</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon users">
+            <i class="fas fa-sign-in-alt"></i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ login_history|length }}</h3>
+            <p>Total Logins</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon jobs">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ unique_users }}</h3>
+            <p>Unique Users</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon pending">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ recent_logins }}</h3>
+            <p>Last 24 Hours</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon companies">
+            <i class="fas fa-globe"></i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ unique_ips }}</h3>
+            <p>Unique IPs</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login History Table -->
+      <div class="content-card">
+        <div class="card-header">
+          <h2>All Login Activities</h2>
+          <div class="export-actions">
+            <button class="btn-export" onclick="exportLoginData()">
+              <i class="fas fa-download"></i> Export CSV
+            </button>
+          </div>
+        </div>
+        <div class="card-content">
+          <table class="data-table" id="loginTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Login Time</th>
+                <th>IP Address</th>
+                <th>User Agent</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for login in login_history %}
+              <tr>
+                <td>{{ login.id }}</td>
+                <td>
+                  <div class="user-info">
+                    <div class="user-name">{{ login.first_name }} {{ login.last_name }}</div>
+                    <div class="user-username">@{{ login.username }}</div>
+                  </div>
+                </td>
+                <td>{{ login.login_time[:16] if login.login_time else 'N/A' }}</td>
+                <td>{{ login.ip_address }}</td>
+                <td class="user-agent">{{ login.user_agent|truncate(50) }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-view" title="View Details" onclick="showLoginDetails('{{ login.id }}')">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Details Modal -->
+  <div class="modal" id="loginDetailsModal">
+    <div class="modal-content">
+      <h2>Login Session Details</h2>
+      <div class="modal-details" id="loginDetails">
+        <!-- Details will be loaded here -->
+      </div>
+      <div class="modal-buttons">
+        <button class="modal-btn cancel" onclick="hideLoginDetailsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Search functionality
+    function searchLogins() {
+      const input = document.getElementById('searchInput');
+      const filter = input.value.toLowerCase();
+      const table = document.getElementById('loginTable');
+      const tr = table.getElementsByTagName('tr');
+      
+      for (let i = 1; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName('td');
+        let found = false;
+        
+        for (let j = 0; j < td.length; j++) {
+          if (td[j] && td[j].textContent.toLowerCase().includes(filter)) {
+            found = true;
+            break;
+          }
+        }
+        
+        tr[i].style.display = found ? '' : 'none';
+      }
+    }
+    
+    // Time filter functionality
+    function filterByTime() {
+      const filter = document.getElementById('timeFilter').value;
+      const table = document.getElementById('loginTable');
+      const tr = table.getElementsByTagName('tr');
+      
+      // This is a simplified implementation
+      // In a real application, you would filter on the server side
+      alert(`Filtering by: ${filter} days. This would filter results in a full implementation.`);
+    }
+    
+    // Function to show login details
+    function showLoginDetails(loginId) {
+      // In a real application, you would fetch this data from the server
+      // For now, we'll find the login entry from the current page data
+      const loginRows = document.querySelectorAll('#loginTable tbody tr');
+      let loginData = null;
+      
+      for (let row of loginRows) {
+        if (row.cells[0].textContent === loginId) {
+          const userInfo = row.cells[1].querySelector('.user-info');
+          loginData = {
+            id: row.cells[0].textContent,
+            user: userInfo.querySelector('.user-name').textContent,
+            username: userInfo.querySelector('.user-username').textContent.replace('@', ''),
+            login_time: row.cells[2].textContent,
+            ip_address: row.cells[3].textContent,
+            user_agent: row.cells[4].textContent,
+            location: "Approximate location based on IP",
+            device: "Detected from User Agent"
+          };
+          break;
+        }
+      }
+      
+      if (loginData) {
+        const detailsDiv = document.getElementById('loginDetails');
+        detailsDiv.innerHTML = `
+          <div class="modal-detail-grid">
+            <div class="modal-detail-item">
+              <div class="modal-detail-label">Login ID</div>
+              <div class="modal-detail-value">#${loginData.id}</div>
+            </div>
+            <div class="modal-detail-item">
+              <div class="modal-detail-label">Username</div>
+              <div class="modal-detail-value">${loginData.username}</div>
+            </div>
+            <div class="modal-detail-item">
+              <div class="modal-detail-label">Full Name</div>
+              <div class="modal-detail-value">${loginData.user}</div>
+            </div>
+            <div class="modal-detail-item">
+              <div class="modal-detail-label">Login Time</div>
+              <div class="modal-detail-value">${loginData.login_time}</div>
+            </div>
+            <div class="modal-detail-item">
+              <div class="modal-detail-label">IP Address</div>
+              <div class="modal-detail-value">${loginData.ip_address}</div>
+            </div>
+            <div class="modal-detail-item">
+              <div class="modal-detail-label">Approximate Location</div>
+              <div class="modal-detail-value">${loginData.location}</div>
+            </div>
+          </div>
+          <div class="modal-detail-item" style="grid-column: 1 / -1;">
+            <div class="modal-detail-label">Device & Browser</div>
+            <div class="modal-detail-value">${loginData.device}</div>
+          </div>
+          <div class="modal-detail-item" style="grid-column: 1 / -1;">
+            <div class="modal-detail-label">User Agent</div>
+            <div class="modal-detail-value">${loginData.user_agent}</div>
+          </div>
+        `;
+        
+        document.getElementById('loginDetailsModal').style.display = 'flex';
+      } else {
+        alert('Login details not found');
+      }
+    }
+    
+    function hideLoginDetailsModal() {
+      document.getElementById('loginDetailsModal').style.display = 'none';
+    }
+    
+    // Export functionality
+    function exportLoginData() {
+      alert('Login data export functionality would be implemented here. This would generate a CSV file with all login history data.');
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modals = document.getElementsByClassName('modal');
+      for (let modal of modals) {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      }
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add any initialization code here
+      console.log('Login History page loaded');
+    });
+  </script>
+</body>
+</html>

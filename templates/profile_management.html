@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile_management.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>User Profile Management</h1>
+            <p>Manage your account information</p>
+        </div>
+        
+        <div class="profile-content">
+            <div class="user-info">
+                <div class="info-group">
+                    <label>Username</label>
+                    <div class="value" id="username-value">{{ username }}</div>
+                </div>
+                
+                <div class="info-group">
+                    <label>Email Address</label>
+                    <div class="value" id="email-value">{{ email }}</div>
+                </div>
+                
+                <div class="info-group">
+                    <label>Password</label>
+                    <div class="value">••••••••••</div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="btn btn-danger" onclick="showDeleteModal()">Delete Account Data</button>
+                <button class="btn btn-secondary" onclick="goToDashboard()">Back to Dashboard</button>
+            </div>
+            
+            <div class="success-message" id="success-message">
+                Your account data has been successfully deleted!
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="delete-modal">
+        <div class="modal-content">
+            <h2>Confirm Account Deletion</h2>
+            <p>Are you sure you want to delete your account data? This action cannot be undone. All your information including username, email, and password will be permanently removed.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="hideDeleteModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="deleteAccount()">Delete My Data</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='profile_management.js') }}"></script>
+</body>
+</html>

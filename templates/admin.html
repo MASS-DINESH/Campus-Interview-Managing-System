@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - College Interview System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin_modern.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Sidebar Navigation -->
+    <div class="admin-sidebar">
+      <div class="sidebar-header">
+        <h2>College Interview System</h2>
+        <div class="admin-info">
+          <div class="admin-avatar">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <div class="admin-details">
+            <span class="admin-name">{{ username }}</span>
+            <span class="admin-role">Administrator</span>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="{{ url_for('admin_dashboard') }}" class="nav-item active">
+          <i class="fas fa-th-large"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="{{ url_for('admin_user_management') }}" class="nav-item">
+          <i class="fas fa-users"></i>
+          <span>User Management</span>
+        </a>
+        <a href="{{ url_for('admin_job_requests') }}" class="nav-item">
+          <i class="fas fa-briefcase"></i>
+          <span>Job Requests</span>
+        </a>
+        <a href="{{ url_for('admin_login_details') }}" class="nav-item">
+          <i class="fas fa-history"></i>
+          <span>Login History</span>
+        </a>
+        <a href="{{ url_for('admin_notifications') }}" class="nav-item">
+          <i class="fas fa-bell"></i>
+          <span>Support Tickets</span>
+          <!-- Add this line for notifications badge -->
+          {% if unread_count > 0 %}
+          <span class="notification-badge">{{ unread_count }}</span>
+          {% endif %}
+        </a>
+        <a href="{{ url_for('logout') }}" class="nav-item logout">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+      <div class="admin-header">
+        <h1>Admin Dashboard</h1>
+        <div class="header-actions">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search...">
+          </div>
+          <div class="notifications">
+            <a href="{{ url_for('admin_notifications') }}">
+            <i class="fas fa-bell"></i>
+            <!-- Add this line for notifications badge -->
+            {% if unread_count > 0 %}
+            <span class="notification-badge">{{ unread_count }}</span>
+            {% endif %}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon users">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ total_users }}</h3>
+            <p>Total Users</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon jobs">
+            <i class="fas fa-briefcase"></i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ total_jobs }}</h3>
+            <p>Job Requests</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon pending">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ pending_jobs }}</h3>
+            <p>Pending Requests</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon companies">
+            <i class="fas fa-building"></i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ total_companies }}</h3>
+            <p>Companies</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="content-grid">
+        <!-- Recent Job Requests -->
+        <div class="content-card">
+          <div class="card-header">
+            <h2>Recent Job Requests</h2>
+            <a href="{{ url_for('admin_job_requests') }}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="card-content">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Applicant</th>
+                  <th>Position</th>
+                  <th>Company</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for job in recent_jobs %}
+                <tr>
+                  <td>{{ job.first_name }} {{ job.last_name }}</td>
+                  <td>{{ job.qualifying_degree }}</td>
+                  <td>
+                    {% if job.email and '@' in job.email %}
+                      {{ job.email.split('@')[1]|upper }}
+                    {% else %}
+                      N/A
+                    {% endif %}
+                  </td>
+                  <td>{{ job.submitted_at.strftime('%Y-%m-%d') if job.submitted_at else 'N/A' }}</td>
+                  <td>
+                    <span class="status-badge {{ job.status|lower }}">{{ job.status }}</span>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn-view" title="View Details">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                      <button class="btn-edit" title="Edit">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Users -->
+        <div class="content-card">
+          <div class="card-header">
+            <h2>Recently Registered Users</h2>
+            <a href="{{ url_for('admin_user_management') }}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="card-content">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Registration Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user in recent_users %}
+                <tr>
+                  <td>{{ user.first_name }} {{ user.last_name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else 'N/A' }}</td>
+                  <td>
+                    <span class="status-badge active">Active</span>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn-view" title="View Details">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                      <button class="btn-edit" title="Edit">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn-delete" title="Delete">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="content-card">
+          <div class="card-header">
+            <h2>Recent Activity</h2>
+            <a href="{{ url_for('admin_login_details') }}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="card-content">
+            <div class="activity-list">
+              {% for activity in recent_activity %}
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-sign-in-alt"></i>
+                </div>
+                <div class="activity-details">
+                  <p class="activity-title">User Login</p>
+                  <p class="activity-info">{{ activity.username }} logged in</p>
+                  <p class="activity-time">{{ activity.login_time.strftime('%Y-%m-%d %H:%M') if activity.login_time else 'N/A' }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Applications Overview -->
+        <div class="content-card">
+          <div class="card-header">
+            <h2>Job Applications Overview</h2>
+            <span class="time-filter">Last 7 Days</span>
+          </div>
+          <div class="card-content">
+            <div class="chart-placeholder">
+              <i class="fas fa-chart-bar"></i>
+              <p>Application trends chart will be displayed here</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple JavaScript for interactive elements
+    document.addEventListener('DOMContentLoaded', function() {
+      // Toggle sidebar on mobile
+      const sidebarToggle = document.querySelector('.sidebar-toggle');
+      const adminSidebar = document.querySelector('.admin-sidebar');
+      
+      if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+          adminSidebar.classList.toggle('collapsed');
+        });
+      }
+      
+      // Active navigation items
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.addEventListener('click', function() {
+          navItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

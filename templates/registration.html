@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Registration</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>User Registration</h2>
+    <form id="registrationForm">
+      <div class="form-row">
+        <div class="form-group">
+          <input type="text" id="first_name" placeholder="First Name" required>
+        </div>
+        <div class="form-group">
+          <input type="text" id="last_name" placeholder="Last Name" required>
+        </div>
+      </div>
+      
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="tel" id="mobile_no" placeholder="Mobile Number" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+      
+      <div class="password-validation">
+        <p>Password must contain:</p>
+        <ul>
+          <li id="length-validation">At least 8 characters</li>
+          <li id="number-validation">At least one number</li>
+          <li id="letter-validation">At least one letter</li>
+        </ul>
+      </div>
+      
+      <button type="submit">Register</button>
+      <br><br>
+      <button type="button" onclick="window.location.href='{{ url_for('index') }}'">Login</button>
+    </form>
+  </div>
+  <script>
+    // Registration form handling
+    document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const first_name = document.getElementById('first_name').value.trim();
+      const last_name = document.getElementById('last_name').value.trim();
+      const mobile_no = document.getElementById('mobile_no').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm_password = document.getElementById('confirm_password').value;
+
+      // Basic validation
+      if (!username || !first_name || !last_name || !mobile_no || !email || !password || !confirm_password) {
+        alert('All fields are required');
+        return;
+      }
+
+      if (password !== confirm_password) {
+        alert('Passwords do not match');
+        return;
+      }
+
+      if (password.length < 8) {
+        alert('Password must be at least 8 characters long');
+        return;
+      }
+
+      try {
+        const res = await fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, first_name, last_name, mobile_no, email, password, confirm_password })
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          alert(data.message);
+          window.location.href = data.redirect;
+        } else {
+          const errorText = await res.text();
+          alert('Error: ' + errorText);
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
+
+    // Password validation indicators
+    document.getElementById('password').addEventListener('input', function() {
+      const password = this.value;
+      
+      // Check length
+      document.getElementById('length-validation').style.color = password.length >= 8 ? 'green' : 'red';
+      
+      // Check for number
+      document.getElementById('number-validation').style.color = /\d/.test(password) ? 'green' : 'red';
+      
+      // Check for letter
+      document.getElementById('letter-validation').style.color = /[a-zA-Z]/.test(password) ? 'green' : 'red';
+    });
+
+    // Confirm password validation
+    document.getElementById('confirm_password').addEventListener('input', function() {
+      const password = document.getElementById('password').value;
+      const confirmPassword = this.value;
+      
+      if (confirmPassword && password !== confirmPassword) {
+        this.style.borderColor = 'red';
+      } else {
+        this.style.borderColor = '#ddd';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Job Requests</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    .requests-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .requests-container h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #1a1d21;
+      font-size: 32px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .requests-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 12px;
+      margin-top: 25px;
+    }
+    
+    .requests-table th, .requests-table td {
+      padding: 18px 20px;
+      text-align: left;
+      border: none;
+      font-size: 16px;
+      color: #000;
+    }
+    
+    .requests-table th {
+      background: rgba(67, 97, 238, 0.1);
+      color: #1a1d21;
+      font-weight: 700;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #4361ee;
+    }
+    
+    .requests-table tr {
+      background: rgba(248, 249, 250, 0.8);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+    }
+    
+    .requests-table tr:hover {
+      background: rgba(67, 97, 238, 0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .status-pending {
+      color: #f39c12;
+      font-weight: 700;
+      padding: 8px 16px;
+      background: rgba(243, 156, 18, 0.1);
+      border-radius: 20px;
+      display: inline-block;
+    }
+    
+    .status-accepted {
+      color: #27ae60;
+      font-weight: 700;
+      padding: 8px 16px;
+      background: rgba(39, 174, 96, 0.1);
+      border-radius: 20px;
+      display: inline-block;
+    }
+    
+    .status-declined {
+      color: #e74c3c;
+      font-weight: 700;
+      padding: 8px 16px;
+      background: rgba(231, 76, 60, 0.1);
+      border-radius: 20px;
+      display: inline-block;
+    }
+    
+    .no-requests {
+      text-align: center;
+      padding: 60px 40px;
+      color: #6c757d;
+      background: rgba(248, 249, 250, 0.8);
+      border-radius: 16px;
+      border: 2px dashed rgba(0, 0, 0, 0.1);
+    }
+    
+    .no-requests h3 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+      font-size: 24px;
+    }
+    
+    .no-requests p {
+      margin-bottom: 25px;
+      font-size: 16px;
+    }
+    
+    .btn-primary {
+      display: inline-block;
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(67, 97, 238, 0.4);
+    }
+    
+    .view-details-btn {
+      background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .view-details-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+    }
+
+    /* Flash messages */
+    .flash-messages {
+      position: fixed;
+      top: 100px;
+      right: 30px;
+      z-index: 1000;
+    }
+    
+    .flash-message {
+      padding: 15px 25px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      font-weight: 600;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      animation: slideInRight 0.3s ease;
+    }
+    
+    .flash-error {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .flash-success {
+      background: #27ae60;
+      color: white;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">{{ session.username[0]|upper if session.username else 'U' }}</div>
+    <div class="title">{{ session.username if session.username else 'User' }}</div>
+    <div class="menu-button" onclick="toggleMenu()">☰</div>
+  </nav>
+
+  <!-- Dropdown Menu -->
+  <div class="dropdown" id="dropdownMenu">
+    <a href="{{ url_for('profile') }}">Home</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('job_request') }}">Job Request</a>
+    <a href="{{ url_for('my_job_requests') }}">My Applications</a>
+    <a href="{{ url_for('admin_login') }}">Admin Login</a>
+    <a href="{{ url_for('profile_management') }}">Manage Account</a>
+    <a href="{{ url_for('help_center') }}">Help Center</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash-message flash-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="requests-container">
+    <h2>My Job Applications</h2>
+    
+    {% if requests and requests|length > 0 %}
+    <table class="requests-table">
+      <thead>
+        <tr>
+          <th>Application ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Qualification</th>
+          <th>Year</th>
+          <th>Submitted On</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for request in requests %}
+        <tr>
+          <td>{{ request.id }}</td>
+          <td>{{ request.first_name }} {{ request.last_name }}</td>
+          <td>{{ request.email }}</td>
+          <td>{{ request.qualifying_degree }}</td>
+          <td>{{ request.year_of_passing }}</td>
+          <td>{{ request.submitted_at[:16] if request.submitted_at else 'N/A' }}</td>
+          <td>
+            {% if request.status == 'Pending' %}
+              <span class="status-pending">Pending</span>
+            {% elif request.status == 'Accepted' %}
+              <span class="status-accepted">Accepted</span>
+            {% elif request.status == 'Declined' %}
+              <span class="status-declined">Declined</span>
+            {% else %}
+              <span class="status-pending">{{ request.status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            <button class="view-details-btn" onclick="viewRequestDetails('{{ request.id }}')">View Details</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no-requests">
+      <h3>No job applications found</h3>
+      <p>You haven't submitted any job applications yet.</p>
+      <a href="{{ url_for('job_request') }}" class="btn-primary">Submit Your First Application</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('dropdownMenu');
+      menu.classList.toggle('show');
+    }
+    
+    // Close dropdown when clicking outside
+    window.onclick = function(event) {
+      if (!event.target.matches('.menu-button')) {
+        const dropdowns = document.getElementsByClassName("dropdown");
+        for (let i = 0; i < dropdowns.length; i++) {
+          const openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+    
+    function viewRequestDetails(requestId) {
+      // Show a modal with detailed information
+      alert('Application ID: ' + requestId + '\n\nDetailed view functionality would be implemented here.');
+      
+      // In a real implementation, this would fetch and display detailed information:
+      /*
+      fetch(`/api/job_request/${requestId}`)
+        .then(response => response.json())
+        .then(data => {
+          // Show modal with data
+          showRequestModal(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error loading request details');
+        });
+      */
+    }
+
+    // Auto-hide flash messages after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+      const flashMessages = document.querySelectorAll('.flash-message');
+      flashMessages.forEach(message => {
+        setTimeout(() => {
+          message.style.opacity = '0';
+          message.style.transform = 'translateX(100%)';
+          setTimeout(() => message.remove(), 300);
+        }, 5000);
+      });
+    });
+  </script>
+</body>
+</html>
