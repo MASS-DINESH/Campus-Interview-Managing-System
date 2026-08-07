@@ -1,696 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - College Campus Interview Management System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin_modern.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* About page specific styles */
-        .about-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .about-header {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-radius: 15px;
-            margin-bottom: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .about-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,224C672,235,768,181,864,160C960,139,1056,149,1152,165.3C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
-            background-size: cover;
-            opacity: 0.1;
-        }
-        
-        .about-header h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            position: relative;
-            animation: fadeInDown 1s ease;
-        }
-        
-        .about-header p {
-            font-size: 1.3rem;
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            animation: fadeInUp 1s ease;
-        }
-        
-        .features-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-        
-        .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #6a11cb, #2575fc);
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-        
-        .feature-icon {
-            font-size: 3rem;
-            color: #3498db;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-        }
-        
-        .feature-card h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-        
-        .stats-section {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            padding: 70px 20px;
-            border-radius: 15px;
-            margin-bottom: 50px;
-            color: white;
-            text-align: center;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-        }
-        
-        .stat-item {
-            padding: 20px;
-            position: relative;
-        }
-        
-        .stat-item::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 3px;
-            background: #3498db;
-        }
-        
-        .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .stat-label {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .team-section {
-            margin-bottom: 50px;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-            position: relative;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #6a11cb, #2575fc);
-            border-radius: 2px;
-        }
-        
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-        
-        .team-member {
-            text-align: center;
-            background: white;
-            padding: 30px 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-        }
-        
-        .team-member:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-        
-        .team-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 20px;
-            border: 5px solid #f1f2f6;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .team-member:hover .team-photo {
-            border-color: #3498db;
-            transform: scale(1.05);
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #f1f2f6;
-            color: #2c3e50;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        
-        .social-links a:hover {
-            background: #3498db;
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .contact-section {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            padding: 70px 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        
-        .contact-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 30px;
-        }
-        
-        .contact-item {
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .contact-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-5px);
-        }
-        
-        .contact-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: #ffffff;
-        }
-        
-        .testimonials {
-            background: #f8f9fa;
-            padding: 70px 20px;
-            border-radius: 15px;
-            margin-bottom: 50px;
-        }
-        
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .testimonial-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            position: relative;
-        }
-        
-        .testimonial-card::before {
-            content: '"';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 4rem;
-            color: #3498db;
-            opacity: 0.2;
-            font-family: Georgia, serif;
-        }
-        
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-            line-height: 1.6;
-        }
-        
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-        }
-        
-        .testimonial-author img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 15px;
-        }
-        
-        .cta-section {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            color: white;
-            border-radius: 15px;
-            margin-bottom: 50px;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            padding: 15px 40px;
-            background: white;
-            color: #3498db;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.2rem;
-            margin-top: 30px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            background: #f8f9fa;
-            color: #2980b9;
-        }
-        
-        /* Animations */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .animated {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-        
-        .animate {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        @media (max-width: 768px) {
-            .about-header h1 {
-                font-size: 2.2rem;
-            }
-            
-            .about-header p {
-                font-size: 1.1rem;
-            }
-            
-            .features-section, .stats-grid, .team-grid, .contact-info, .testimonial-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stat-number {
-                font-size: 2.5rem;
-            }
-            
-            .cta-button {
-                padding: 12px 30px;
-                font-size: 1.1rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Campus Placement & Interview Drive - Discover our hiring partners, placement statistics, and career recruitment process."/>
+  <title>About Placement Drives | Campus Interview Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">CIMS</div>
-        <div class="title">College Interview System</div>
-        <div class="menu-button" onclick="toggleMenu()">☰</div>
-    </nav>
+  <!-- Header Navbar -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="brand-text">Campus<span>Placement</span></div>
+    </a>
+    <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+    <ul class="nav-menu">
+      <li><a href="/" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+      <li><a href="{{ url_for('register_page') }}" class="nav-link"><i class="fas fa-user-plus"></i> Register</a></li>
+      <li><a href="{{ url_for('about') }}" class="nav-link active"><i class="fas fa-info-circle"></i> About Drives</a></li>
+      <li><a href="{{ url_for('admin_login') }}" class="nav-link"><i class="fas fa-user-shield"></i> Admin Portal</a></li>
+    </ul>
+  </nav>
 
-    <!-- Dropdown Menu -->
-    <div class="dropdown" id="dropdownMenu">
-        <a href="{{ url_for('profile') }}">Home</a>
-        <a href="{{ url_for('about') }}">About</a>
-        <a href="{{ url_for('job_request') }}">Job Request</a>
-        <a href="{{ url_for('my_job_requests') }}">My Applications</a>
-        <a href="{{ url_for('admin_login') }}">Admin Login</a>
-        <a href="{{ url_for('profile_management') }}">Manage Account</a>
-        <a href="{{ url_for('help_center') }}">Help Center</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
+  <!-- Hero Section -->
+  <header style="background: var(--bg-gradient); color: white; padding: 4.5rem 1.5rem; text-align: center; position: relative; overflow: hidden;">
+    <div style="max-width: 900px; margin: 0 auto; position: relative; z-index: 2;">
+      <span class="status-badge" style="background: rgba(99, 102, 241, 0.25); color: #a5b4fc; border: 1px solid rgba(255,255,255,0.2); margin-bottom: 1.25rem;">
+        <i class="fas fa-rocket"></i> Career Acceleration Program 2026
+      </span>
+      <h1 style="font-size: var(--font-h1); font-weight: 800; line-height: 1.2; margin-bottom: 1.25rem;">
+        Empowering Next-Generation Talent with Top Tech Leaders
+      </h1>
+      <p style="font-size: clamp(1.05rem, 1.8vw, 1.25rem); color: #cbd5e1; margin-bottom: 2rem;">
+        Bridging the gap between ambitious students and premier multinational corporations through seamless automated interview management.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{{ url_for('register_page') }}" class="btn btn-primary" style="width: auto; padding: 0.9rem 2rem;">
+          Register as Candidate <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="/" class="btn btn-outline" style="width: auto; padding: 0.9rem 2rem; color: white; border-color: rgba(255,255,255,0.3);">
+          Student Login <i class="fas fa-sign-in-alt"></i>
+        </a>
+      </div>
     </div>
+  </header>
 
-    <div class="about-container">
-        <!-- Header Section -->
-        <div class="about-header">
-            <h1>College Campus Interview Management System</h1>
-            <p>Bridging the gap between talented students and leading companies through an innovative digital recruitment platform</p>
-        </div>
-
-        <!-- Features Section -->
-        <h2 class="section-title">Key Features</h2>
-        <div class="features-section">
-            <div class="feature-card animated">
-                <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
-                <h3>Streamlined Applications</h3>
-                <p>Students can easily submit job applications with all required documents through our intuitive interface.</p>
-            </div>
-            
-            <div class="feature-card animated">
-                <div class="feature-icon"><i class="fas fa-building"></i></div>
-                <h3>Company Management</h3>
-                <p>Recruiters can efficiently manage job postings, review applications, and schedule interviews.</p>
-            </div>
-            
-            <div class="feature-card animated">
-                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-                <h3>Real-time Tracking</h3>
-                <p>Track application status in real-time from submission to final decision with transparent updates.</p>
-            </div>
-            
-            <div class="feature-card animated">
-                <div class="feature-icon"><i class="fas fa-lock"></i></div>
-                <h3>Secure Document Management</h3>
-                <p>Secure upload and storage of resumes, mark sheets, and other required documents with encryption.</p>
-            </div>
-            
-            <div class="feature-card animated">
-                <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
-                <h3>Responsive Design</h3>
-                <p>Access the system from any device - desktop, tablet, or smartphone with full functionality.</p>
-            </div>
-            
-            <div class="feature-card animated">
-                <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
-                <h3>Analytics & Reporting</h3>
-                <p>Comprehensive reports on placement statistics, recruitment trends, and performance metrics.</p>
-            </div>
-        </div>
-
-        <!-- Stats Section -->
-        <div class="stats-section">
-            <h2 class="section-title">Our Impact</h2>
-            <div class="stats-grid">
-                <div class="stat-item animated">
-                    <div class="stat-number" id="companies-count">500+</div>
-                    <div class="stat-label">Companies Registered</div>
-                </div>
-                
-                <div class="stat-item animated">
-                    <div class="stat-number" id="students-count">10,000+</div>
-                    <div class="stat-label">Students Placed</div>
-                </div>
-                
-                <div class="stat-item animated">
-                    <div class="stat-number" id="satisfaction-rate">95%</div>
-                    <div class="stat-label">Satisfaction Rate</div>
-                </div>
-                
-                <div class="stat-item animated">
-                    <div class="stat-number" id="colleges-count">50+</div>
-                    <div class="stat-label">Colleges Partnered</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Testimonials Section -->
-        <div class="testimonials">
-            <h2 class="section-title">What People Say</h2>
-            <div class="testimonial-grid">
-                <div class="testimonial-card animated">
-                    <p class="testimonial-text">This platform revolutionized our campus recruitment process. We've seen a 40% increase in successful placements since implementation.</p>
-                    <div class="testimonial-author">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Dr. Robert Miller">
-                        <div>
-                            <h4>Dr. Robert Miller</h4>
-                            <p>Placement Director, Tech University</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card animated">
-                    <p class="testimonial-text">As a recruiter, the streamlined process saves us countless hours. The candidate matching algorithm is exceptionally accurate.</p>
-                    <div class="testimonial-author">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
-                        <div>
-                            <h4>Sarah Johnson</h4>
-                            <p>HR Manager, Tech Solutions Inc.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card animated">
-                    <p class="testimonial-text">I secured my dream job through this platform! The application process was smooth, and I received updates every step of the way.</p>
-                    <div class="testimonial-author">
-                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Alex Chen">
-                        <div>
-                            <h4>Alex Chen</h4>
-                            <p>Software Engineer, Class of 2022</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Team Section -->
-        <div class="team-section">
-            <h2 class="section-title">Our Team</h2>
-            <div class="team-grid">
-                <div class="team-member animated">
-                    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Dr. Sarah Johnson" class="team-photo">
-                    <h3>Dr. Sarah Johnson</h3>
-                    <p>Project Lead</p>
-                    <p>Ph.D. in Computer Science with 15+ years of experience in educational technology.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fas fa-envelope"></i></a>
-                    </div>
-                </div>
-                
-                <div class="team-member animated">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen" class="team-photo">
-                    <h3>Michael Chen</h3>
-                    <p>Lead Developer</p>
-                    <p>Full-stack developer specializing in creating efficient, scalable web applications.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fas fa-envelope"></i></a>
-                    </div>
-                </div>
-                
-                <div class="team-member animated">
-                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya Sharma" class="team-photo">
-                    <h3>Priya Sharma</h3>
-                    <p>UI/UX Designer</p>
-                    <p>Creating intuitive user experiences that make complex processes simple and enjoyable.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-behance"></i></a>
-                        <a href="#"><i class="fas fa-envelope"></i></a>
-                    </div>
-                </div>
-                
-                <div class="team-member animated">
-                    <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="David Wilson" class="team-photo">
-                    <h3>David Wilson</h3>
-                    <p>Career Counselor</p>
-                    <p>Helping students prepare for interviews and choose the right career paths.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fas fa-envelope"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contact Section -->
-        <div class="contact-section">
-            <h2 class="section-title">Contact Us</h2>
-            <div class="contact-info">
-                <div class="contact-item animated">
-                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                    <h3>Email</h3>
-                    <p>support@cims.com</p>
-                    <p>careers@cims.com</p>
-                </div>
-                
-                <div class="contact-item animated">
-                    <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                    <h3>Phone</h3>
-                    <p>+1 (555) 123-4567</p>
-                    <p>+1 (555) 987-6543</p>
-                </div>
-                
-                <div class="contact-item animated">
-                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                    <h3>Address</h3>
-                    <p>123 Education Lane</p>
-                    <p>Tech City, TC 54321</p>
-                </div>
-            </div>
-            <p>We're here to help you with any questions about our platform or the recruitment process.</p>
-        </div>
-
-        <!-- CTA Section -->
-        <div class="cta-section">
-            <h2>Ready to Transform Your Campus Recruitment?</h2>
-            <p>Join hundreds of educational institutions and companies already using our platform</p>
-            <a href="{{ url_for('register_page') }}" class="cta-button">Get Started Today</a>
-        </div>
+  <!-- Placement Metrics Counter Strip -->
+  <section style="background: white; border-bottom: 1px solid var(--border-color); padding: 3rem 1.5rem;">
+    <div style="max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; text-align: center;">
+      <div>
+        <div style="font-size: 2.8rem; font-weight: 800; color: var(--primary);">98.4%</div>
+        <p style="color: var(--text-muted); font-weight: 600;">Overall Placement Rate</p>
+      </div>
+      <div>
+        <div style="font-size: 2.8rem; font-weight: 800; color: var(--secondary);">500+</div>
+        <p style="color: var(--text-muted); font-weight: 600;">Corporate Hiring Partners</p>
+      </div>
+      <div>
+        <div style="font-size: 2.8rem; font-weight: 800; color: var(--accent);">₹24 LPA</div>
+        <p style="color: var(--text-muted); font-weight: 600;">Highest Package Offered</p>
+      </div>
+      <div>
+        <div style="font-size: 2.8rem; font-weight: 800; color: var(--success);">15,000+</div>
+        <p style="color: var(--text-muted); font-weight: 600;">Students Successfully Placed</p>
+      </div>
     </div>
+  </section>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById('dropdownMenu');
-            menu.classList.toggle('show');
-        }
-        
-        // Close dropdown when clicking outside
-        window.onclick = function(event) {
-            if (!event.target.matches('.menu-button')) {
-                const dropdowns = document.getElementsByClassName("dropdown");
-                for (let i = 0; i < dropdowns.length; i++) {
-                    const openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
+  <main class="main-wrapper">
+    <!-- Corporate Partners Showcase Grid -->
+    <section style="margin-bottom: 4rem;">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <span style="color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem;">Global Tech Partners</span>
+        <h2 style="font-size: var(--font-h2); font-weight: 800; color: var(--text-main); margin-top: 0.5rem;">Top Recruiters Hiring On Campus</h2>
+      </div>
 
-        // Animation on scroll
-        document.addEventListener('DOMContentLoaded', function() {
-            const animatedElements = document.querySelectorAll('.animated');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.classList.add('animate');
-                        }, 100);
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-            
-            animatedElements.forEach(element => {
-                observer.observe(element);
-            });
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+        <div class="glass-card" style="text-align: center; padding: 2rem;">
+          <div style="font-size: 2.5rem; color: #4285F4; margin-bottom: 1rem;"><i class="fab fa-google"></i></div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Google Cloud & Tech</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Hiring Software Engineers, Cloud Architects, and ML Specialists.</p>
+        </div>
 
-            // Animate statistics
-            animateValue('companies-count', 0, 500, 1500);
-            animateValue('students-count', 0, 10000, 2000);
-            animateValue('satisfaction-rate', 0, 95, 1500);
-            animateValue('colleges-count', 0, 50, 1500);
-        });
+        <div class="glass-card" style="text-align: center; padding: 2rem;">
+          <div style="font-size: 2.5rem; color: #00A4EF; margin-bottom: 1rem;"><i class="fab fa-microsoft"></i></div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Microsoft Azure</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Recruiting Full Stack Developers, Security Consultants, and Data Engineers.</p>
+        </div>
 
-        // Function to animate values
-        function animateValue(id, start, end, duration) {
-            const element = document.getElementById(id);
-            if (!element) return;
-            
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const value = Math.floor(progress * (end - start) + start);
-                element.innerHTML = value + (id === 'satisfaction-rate' ? '%' : '+');
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-    </script>
+        <div class="glass-card" style="text-align: center; padding: 2rem;">
+          <div style="font-size: 2.5rem; color: #FF9900; margin-bottom: 1rem;"><i class="fab fa-amazon"></i></div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Amazon Web Services</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Hiring Systems Engineers, AWS Developers, and Operations Leads.</p>
+        </div>
+
+        <div class="glass-card" style="text-align: center; padding: 2rem;">
+          <div style="font-size: 2.5rem; color: #10b981; margin-bottom: 1rem;"><i class="fas fa-building-columns"></i></div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Infosys & TCS</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Mass campus hiring for Systems Engineers and Digital Specialists.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Placement Process Roadmap -->
+    <section class="glass-card" style="margin-bottom: 4rem; padding: 3rem 2rem;">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 style="font-size: var(--font-h2); font-weight: 800; color: var(--text-main);">5-Step Placement Journey</h2>
+        <p style="color: var(--text-muted);">How our automated system connects you to your dream job</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; position: relative;">
+        <div style="text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="width: 48px; height: 48px; background: var(--grad-primary); color: white; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 1rem; font-size: 1.2rem;">1</div>
+          <h4 style="font-weight: 700; margin-bottom: 0.4rem;">Registration</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Submit candidate details and credentials.</p>
+        </div>
+
+        <div style="text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="width: 48px; height: 48px; background: var(--grad-accent); color: white; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 1rem; font-size: 1.2rem;">2</div>
+          <h4 style="font-weight: 700; margin-bottom: 0.4rem;">Document Upload</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Upload 10th, 12th, degree marksheets & resume.</p>
+        </div>
+
+        <div style="text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="width: 48px; height: 48px; background: var(--grad-gold); color: white; border-radius: var(--radius-full); display: flex; align-items: justify; justify-content: center; font-weight: 800; margin: 0 auto 1rem; font-size: 1.2rem; align-items: center;">3</div>
+          <h4 style="font-weight: 700; margin-bottom: 0.4rem;">Verification</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Admin review and eligibility clearance.</p>
+        </div>
+
+        <div style="text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="width: 48px; height: 48px; background: var(--grad-emerald); color: white; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 1rem; font-size: 1.2rem;">4</div>
+          <h4 style="font-weight: 700; margin-bottom: 0.4rem;">Interview Round</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Coding assessment & technical panel.</p>
+        </div>
+
+        <div style="text-align: center; padding: 1.5rem; background: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="width: 48px; height: 48px; background: var(--grad-coral); color: white; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 1rem; font-size: 1.2rem;">5</div>
+          <h4 style="font-weight: 700; margin-bottom: 0.4rem;">Job Offer</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Receive direct offer letter & joining date.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      &copy; 2026 Campus Interview Management System. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

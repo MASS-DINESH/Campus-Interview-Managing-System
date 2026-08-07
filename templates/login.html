@@ -3,19 +3,106 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Campus Interview Login</title>
+  <meta name="description" content="Campus Interview Management System - Sign in to access placement drives, career opportunities, and application status tracking."/>
+  <title>Campus Interview Portal | Sign In</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <div class="container">
-    <h2>Login</h2>
-    <form id="loginForm">
-      <input type="text" id="login_username" placeholder="Username" required><br>
-      <input type="password" id="login_password" placeholder="Password" required><br>
-      <button type="submit">Login</button><br><br>
-      <button type="button" onclick="window.location.href='{{ url_for('register_page') }}'">Register</button>
-    </form>
-  </div>
+  <!-- Header Navbar -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="brand-text">Campus<span>Placement</span></div>
+    </a>
+    <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+    <ul class="nav-menu">
+      <li><a href="/" class="nav-link active"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+      <li><a href="{{ url_for('register_page') }}" class="nav-link"><i class="fas fa-user-plus"></i> Register</a></li>
+      <li><a href="{{ url_for('drives') }}" class="nav-link"><i class="fas fa-building-columns"></i> Hiring Drives</a></li>
+      <li><a href="{{ url_for('resources') }}" class="nav-link"><i class="fas fa-book-open"></i> Prep Resources</a></li>
+      <li><a href="{{ url_for('about') }}" class="nav-link"><i class="fas fa-info-circle"></i> About Drives</a></li>
+      <li><a href="{{ url_for('admin_login') }}" class="nav-link"><i class="fas fa-user-shield"></i> Admin Portal</a></li>
+    </ul>
+  </nav>
+
+  <!-- Auth Main Grid -->
+  <main class="main-wrapper" style="padding-top: 1rem;">
+    <div class="auth-container">
+      <!-- Left Visual Hero Banner -->
+      <div class="auth-banner">
+        <div class="banner-content">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.2); padding: 0.4rem 1rem; border-radius: var(--radius-full); margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.2);">
+            <i class="fas fa-sparkles" style="color: #6366f1;"></i>
+            <span style="font-size: 0.85rem; font-weight: 700; color: white;">2026 Campus Placement Drive</span>
+          </div>
+          <h1 class="banner-title">Launch Your Tech Career With Top Global Giants</h1>
+          <p class="banner-subtitle">Connect with 500+ premier hiring partners including Google, Microsoft, Amazon, TCS & Infosys.</p>
+        </div>
+
+        <div class="hiring-partners-strip">
+          <p class="partners-title"><i class="fas fa-building"></i> Featured Hiring Partners</p>
+          <div class="partners-logos">
+            <span class="company-pill"><i class="fab fa-google" style="color: #4285F4;"></i> Google</span>
+            <span class="company-pill"><i class="fab fa-microsoft" style="color: #00A4EF;"></i> Microsoft</span>
+            <span class="company-pill"><i class="fab fa-amazon" style="color: #FF9900;"></i> Amazon</span>
+            <span class="company-pill"><i class="fas fa-laptop-code" style="color: #10b981;"></i> Infosys</span>
+            <span class="company-pill"><i class="fas fa-brain" style="color: #ec4899;"></i> TCS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Form Side -->
+      <div class="auth-form-side">
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Enter your credentials to manage your job applications</p>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label class="form-label" for="login_username">Username</label>
+            <div class="input-icon-wrapper">
+              <i class="fas fa-user"></i>
+              <input type="text" id="login_username" class="form-control" placeholder="Enter your username" required autocomplete="username">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login_password">Password</label>
+            <div class="input-icon-wrapper">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="login_password" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+              <i class="fas fa-eye pwd-toggle" onclick="togglePasswordVisibility('login_password', this)"></i>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+            Sign In <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Don't have an account? 
+            <a href="{{ url_for('register_page') }}" style="color: var(--primary); font-weight: 700; text-decoration: none;">Create Account</a>
+          </p>
+          <div style="margin-top: 0.85rem;">
+            <a href="{{ url_for('admin_login') }}" style="color: var(--text-light); font-size: 0.85rem; text-decoration: none;">
+              <i class="fas fa-shield-alt"></i> Executive Admin Sign In
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      &copy; 2026 Campus Interview Management System. All rights reserved.
+    </div>
+  </footer>
+
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

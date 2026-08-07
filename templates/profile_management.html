@@ -1,58 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile Management</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='profile_management.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Manage Candidate Account Settings & Profile Data."/>
+  <title>Account Settings | Campus Placement</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>User Profile Management</h1>
-            <p>Manage your account information</p>
-        </div>
-        
-        <div class="profile-content">
-            <div class="user-info">
-                <div class="info-group">
-                    <label>Username</label>
-                    <div class="value" id="username-value">{{ username }}</div>
-                </div>
-                
-                <div class="info-group">
-                    <label>Email Address</label>
-                    <div class="value" id="email-value">{{ email }}</div>
-                </div>
-                
-                <div class="info-group">
-                    <label>Password</label>
-                    <div class="value">••••••••••</div>
-                </div>
-            </div>
-            
-            <div class="actions">
-                <button class="btn btn-danger" onclick="showDeleteModal()">Delete Account Data</button>
-                <button class="btn btn-secondary" onclick="goToDashboard()">Back to Dashboard</button>
-            </div>
-            
-            <div class="success-message" id="success-message">
-                Your account data has been successfully deleted!
-            </div>
-        </div>
-    </div>
-    
-    <div class="modal" id="delete-modal">
-        <div class="modal-content">
-            <h2>Confirm Account Deletion</h2>
-            <p>Are you sure you want to delete your account data? This action cannot be undone. All your information including username, email, and password will be permanently removed.</p>
-            <div class="modal-buttons">
-                <button class="modal-btn cancel" onclick="hideDeleteModal()">Cancel</button>
-                <button class="modal-btn confirm" onclick="deleteAccount()">Delete My Data</button>
-            </div>
-        </div>
-    </div>
+  <!-- Header Navbar -->
+  <nav class="navbar">
+    <a href="{{ url_for('profile') }}" class="nav-brand">
+      <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="brand-text">Campus<span>Placement</span></div>
+    </a>
+    <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+    <ul class="nav-menu">
+      <li><a href="{{ url_for('profile') }}" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="{{ url_for('job_request') }}" class="nav-link"><i class="fas fa-paper-plane"></i> Apply Placement</a></li>
+      <li><a href="{{ url_for('my_job_requests') }}" class="nav-link"><i class="fas fa-list-check"></i> My Applications</a></li>
+      <li><a href="{{ url_for('help_center') }}" class="nav-link"><i class="fas fa-headset"></i> Support Desk</a></li>
+      <li><a href="{{ url_for('profile_management') }}" class="nav-link active"><i class="fas fa-user-gear"></i> Settings</a></li>
+      <li><a href="{{ url_for('logout') }}" class="nav-link" style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </nav>
 
-    <script src="{{ url_for('static', filename='profile_management.js') }}"></script>
+  <main class="main-wrapper">
+    <div style="max-width: 680px; margin: 0 auto;">
+      <div class="glass-card">
+        <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
+          <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--grad-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800;">
+            <i class="fas fa-id-card"></i>
+          </div>
+          <div>
+            <h1 style="font-size: var(--font-h2); font-weight: 800; color: var(--text-main);">Candidate Settings</h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Manage your active session and account preferences</p>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: var(--radius-md); padding: 1.5rem; border: 1px solid var(--border-color); margin-bottom: 2rem;">
+          <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Username</span>
+            <span style="font-weight: 800; color: var(--text-main); font-size: 1.05rem;">{{ username }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Email Address</span>
+            <span style="font-weight: 700; color: var(--primary); font-size: 1.05rem;">{{ email }}</span>
+          </div>
+        </div>
+
+        <div id="success-message" style="display: none; background: var(--success-light); color: var(--success); padding: 1rem; border-radius: var(--radius-md); font-weight: 700; margin-bottom: 1.5rem; text-align: center;">
+          <i class="fas fa-check-circle"></i> Account deleted successfully. Redirecting...
+        </div>
+
+        <!-- Danger Zone -->
+        <div style="border: 1px solid var(--danger-light); background: #fef2f2; border-radius: var(--radius-md); padding: 1.5rem;">
+          <h3 style="color: var(--danger); font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-triangle-exclamation"></i> Danger Zone
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;">
+            Deleting your candidate account will permanently erase your profile, job placement applications, and support history.
+          </p>
+          <button type="button" class="btn btn-danger" onclick="showDeleteModal()" style="width: auto;">
+            <i class="fas fa-trash-alt"></i> Delete Candidate Account
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Delete Modal Backdrop -->
+  <div id="delete-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="color: var(--danger); font-weight: 800;"><i class="fas fa-exclamation-triangle"></i> Confirm Account Deletion</h3>
+        <button class="modal-close-btn" onclick="hideDeleteModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <p style="font-size: 1.05rem; color: var(--text-main); font-weight: 600; margin-bottom: 1rem;">
+          Are you sure you want to permanently delete your account?
+        </p>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
+          This action cannot be undone. All submitted marksheet files and job requests will be erased.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+          <button type="button" class="btn btn-outline" onclick="hideDeleteModal()" style="width: auto;">Cancel</button>
+          <button type="button" class="btn btn-danger" onclick="deleteAccount()" style="width: auto;">Yes, Delete Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      &copy; 2026 Campus Interview Management System. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="{{ url_for('static', filename='profile_management.js') }}"></script>
 </body>
 </html>

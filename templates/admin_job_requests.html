@@ -3,330 +3,263 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Job Applications Management - College Interview System</title>
+  <meta name="description" content="Placement Drive Job Applications Reviewer - Admin Portal."/>
+  <title>Job Placement Requests | Admin Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='admin_modern.css') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .notification-badge {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: linear-gradient(135deg, #e63946 0%, #d90429 100%);
-      color: white;
-      font-size: 12px;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      border: 3px solid white;
-      box-shadow: 0 3px 10px rgba(231, 57, 70, 0.3);
-    }
-    
-    .notifications {
-      position: relative;
-      margin-left: 15px;
-    }
-    
-    .notifications a {
-      color: var(--dark);
-      text-decoration: none;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      transition: var(--transition);
-    }
-    
-    .notifications a:hover {
-      background: rgba(0, 0, 0, 0.05);
-    }
-  </style>
 </head>
 <body>
-  <div class="admin-container">
-    <!-- Sidebar Navigation -->
-    <div class="admin-sidebar">
-      <div class="sidebar-header">
-        <h2>College Interview System</h2>
-        <div class="admin-info">
-          <div class="admin-avatar">
-            <i class="fas fa-user-shield"></i>
-          </div>
-          <div class="admin-details">
-            <span class="admin-name">{{ username }}</span>
-            <span class="admin-role">Administrator</span>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <a href="{{ url_for('admin_dashboard') }}" class="sidebar-brand">
+        <div class="sidebar-brand-icon"><i class="fas fa-shield-halved"></i></div>
+        <div class="sidebar-brand-title">Executive<span>Admin</span></div>
+      </a>
+
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-item">
+          <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-chart-pie"></i> Dashboard Overview</a>
+        </li>
+        <li class="sidebar-nav-item">
+          <a href="{{ url_for('admin_user_management') }}"><i class="fas fa-users-gear"></i> User Management</a>
+        </li>
+        <li class="sidebar-nav-item active">
+          <a href="{{ url_for('admin_job_requests') }}"><i class="fas fa-briefcase"></i> Placement Requests</a>
+        </li>
+        <li class="sidebar-nav-item">
+          <a href="{{ url_for('admin_login_details') }}"><i class="fas fa-history"></i> Login Security Log</a>
+        </li>
+        <li class="sidebar-nav-item">
+          <a href="{{ url_for('admin_notifications') }}">
+            <i class="fas fa-envelope-open-text"></i> Support Tickets
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="admin-user-info">
+          <div class="admin-avatar">AD</div>
+          <div>
+            <div style="font-weight: 700; font-size: 0.9rem; color: white;">{{ username }}</div>
+            <div style="font-size: 0.75rem; color: #94a3b8;">Placement Officer</div>
           </div>
         </div>
       </div>
-      
-      <nav class="sidebar-nav">
-        <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
-          <i class="fas fa-th-large"></i>
-          <span>Dashboard</span>
-        </a>
-        <a href="{{ url_for('admin_user_management') }}" class="nav-item">
-          <i class="fas fa-users"></i>
-          <span>User Management</span>
-        </a>
-        <a href="{{ url_for('admin_job_requests') }}" class="nav-item active">
-          <i class="fas fa-briefcase"></i>
-          <span>Job Requests</span>
-        </a>
-        <a href="{{ url_for('admin_login_details') }}" class="nav-item">
-          <i class="fas fa-history"></i>
-          <span>Login History</span>
-        </a>
-        <a href="{{ url_for('admin_notifications') }}" class="nav-item">
-          <i class="fas fa-bell"></i>
-          <span>Support Tickets</span>
-          {% if unread_count is defined and unread_count > 0 %}
-          <span class="notification-badge">{{ unread_count }}</span>
-          {% endif %}
-        </a>
-        <a href="{{ url_for('logout') }}" class="nav-item logout">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Logout</span>
-        </a>
-      </nav>
-    </div>
+    </aside>
 
-    <!-- Main Content -->
-    <div class="admin-main">
-      <div class="admin-header">
-        <h1>Job Applications Management</h1>
-        <div class="header-actions">
-          <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search applications...">
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-title">
+          <h1>Placement Application Reviewer</h1>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Review candidate marksheets, CGPA, backlogs & approve placement eligibility</p>
+        </div>
+      </header>
+
+      <div style="padding: 2rem;">
+        <!-- Filter Tabs -->
+        <div class="admin-card" style="margin-bottom: 1.5rem;">
+          <div style="padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-primary filter-tab active" onclick="filterByStatus('all', this)" style="width: auto; padding: 0.4rem 1rem; font-size: 0.85rem;">All Applications</button>
+              <button type="button" class="btn btn-outline filter-tab" onclick="filterByStatus('Pending', this)" style="width: auto; padding: 0.4rem 1rem; font-size: 0.85rem;">Pending Review</button>
+              <button type="button" class="btn btn-outline filter-tab" onclick="filterByStatus('Accepted', this)" style="width: auto; padding: 0.4rem 1rem; font-size: 0.85rem;">Accepted</button>
+              <button type="button" class="btn btn-outline filter-tab" onclick="filterByStatus('Declined', this)" style="width: auto; padding: 0.4rem 1rem; font-size: 0.85rem;">Declined</button>
+            </div>
+
+            <div class="input-icon-wrapper" style="max-width: 300px;">
+              <i class="fas fa-search"></i>
+              <input type="text" id="reqSearch" class="form-control" placeholder="Search application..." onkeyup="filterReqTable()">
+            </div>
           </div>
-          <div class="filter-dropdown">
-            <select>
-              <option>All Statuses</option>
-              <option>Pending</option>
-              <option>Accepted</option>
-              <option>Declined</option>
-            </select>
+        </div>
+
+        <!-- Placement Job Requests Table -->
+        <div class="admin-card">
+          <div class="table-responsive">
+            <table class="data-table" id="reqTable">
+              <thead>
+                <tr>
+                  <th>Req ID</th>
+                  <th>Candidate & Reg No</th>
+                  <th>Department & Degree</th>
+                  <th>CGPA & Backlogs</th>
+                  <th>Role Preference</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if job_requests %}
+                  {% for req in job_requests %}
+                  <tr data-status="{{ req.status }}">
+                    <td style="font-weight: 800; color: var(--primary);">#REQ-{{ req.id }}</td>
+                    <td>
+                      <div style="font-weight: 700;">{{ req.first_name }} {{ req.last_name }}</div>
+                      <div style="font-size: 0.8rem; color: var(--text-muted);">Reg: {{ req.register_no or 'N/A' }}</div>
+                    </td>
+                    <td>
+                      <div style="font-weight: 600;">{{ req.department or req.qualifying_degree }}</div>
+                      <div style="font-size: 0.8rem; color: var(--text-muted);">{{ req.qualifying_degree }} ({{ req.year_of_passing }})</div>
+                    </td>
+                    <td>
+                      <div style="font-weight: 700; color: var(--success);">CGPA: {{ req.cgpa or 'N/A' }}</div>
+                      <div style="font-size: 0.8rem; color: {% if req.backlogs and req.backlogs > 0 %}var(--danger){% else %}var(--text-muted){% endif %};">
+                        Backlogs: {{ req.backlogs if req.backlogs is not none else '0' }}
+                      </div>
+                    </td>
+                    <td><span style="background: #f1f5f9; padding: 0.25rem 0.6rem; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600;">{{ req.preferred_role or 'Software SDE' }}</span></td>
+                    <td>
+                      {% if req.status == 'Accepted' %}
+                        <span class="status-badge accepted"><i class="fas fa-check-circle"></i> Accepted</span>
+                      {% elif req.status == 'Declined' %}
+                        <span class="status-badge declined"><i class="fas fa-times-circle"></i> Declined</span>
+                      {% else %}
+                        <span class="status-badge pending"><i class="fas fa-hourglass-half"></i> Pending</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-outline" style="width: auto; padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="viewRequestDetails({{ req.id }})">
+                          <i class="fas fa-eye" style="color: var(--primary);"></i> Inspect
+                        </button>
+                        {% if req.status != 'Accepted' %}
+                        <button type="button" class="btn btn-outline" style="width: auto; padding: 0.3rem 0.6rem; font-size: 0.8rem; border-color: var(--success);" onclick="updateStatus({{ req.id }}, 'Accepted')">
+                          <i class="fas fa-check" style="color: var(--success);"></i> Accept
+                        </button>
+                        {% endif %}
+                        {% if req.status != 'Declined' %}
+                        <button type="button" class="btn btn-outline" style="width: auto; padding: 0.3rem 0.6rem; font-size: 0.8rem; border-color: var(--danger-light);" onclick="updateStatus({{ req.id }}, 'Declined')">
+                          <i class="fas fa-xmark" style="color: var(--danger);"></i> Decline
+                        </button>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No placement job requests submitted.</td></tr>
+                {% endif %}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
+    </main>
+  </div>
 
-      <!-- Stats Overview -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon jobs">
-            <i class="fas fa-briefcase"></i>
-          </div>
-          <div class="stat-info">
-            <h3>{{ job_requests|length }}</h3>
-            <p>Total Applications</p>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon pending">
-            <i class="fas fa-clock"></i>
-          </div>
-          <div class="stat-info">
-            <h3>{{ job_requests|selectattr('status', 'equalto', 'Pending')|list|length }}</h3>
-            <p>Pending Review</p>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon users">
-            <i class="fas fa-check-circle"></i>
-          </div>
-          <div class="stat-info">
-            <h3>{{ job_requests|selectattr('status', 'equalto', 'Accepted')|list|length }}</h3>
-            <p>Accepted</p>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon companies">
-            <i class="fas fa-times-circle"></i>
-          </div>
-          <div class="stat-info">
-            <h3>{{ job_requests|selectattr('status', 'equalto', 'Declined')|list|length }}</h3>
-            <p>Declined</p>
-          </div>
-        </div>
+  <!-- Detailed Request Inspector Modal -->
+  <div id="detailsModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="font-weight: 800;"><i class="fas fa-file-contract"></i> Candidate Application #<span id="modal_req_id"></span></h3>
+        <button class="modal-close-btn" onclick="closeDetailsModal()">&times;</button>
       </div>
-
-      <!-- Applications Table -->
-      <div class="content-card">
-        <div class="card-header">
-          <h2>All Job Applications</h2>
-          <div class="export-actions">
-            <button class="btn-export">
-              <i class="fas fa-download"></i> Export CSV
-            </button>
-          </div>
-        </div>
-        <div class="card-content">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Applicant</th>
-                <th>Email</th>
-                <th>Qualification</th>
-                <th>Year</th>
-                <th>District</th>
-                <th>Submitted On</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for job_request in job_requests %}
-              <tr>
-                <td>{{ job_request.id }}</td>
-                <td>{{ job_request.first_name }} {{ job_request.last_name }}</td>
-                <td>{{ job_request.email }}</td>
-                <td>{{ job_request.qualifying_degree }}</td>
-                <td>{{ job_request.year_of_passing }}</td>
-                <td>{{ job_request.district }}</td>
-                <td>{{ job_request.submitted_at[:10] if job_request.submitted_at else 'N/A' }}</td>
-                <td>
-                  {% if job_request.status == 'Pending' %}
-                    <span class="status-badge pending">Pending</span>
-                  {% elif job_request.status == 'Accepted' %}
-                    <span class="status-badge accepted">Accepted</span>
-                  {% elif job_request.status == 'Declined' %}
-                    <span class="status-badge declined">Declined</span>
-                  {% endif %}
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn-view" onclick="viewApplication('{{ job_request.id }}')" title="View Details">
-                      <i class="fas fa-eye"></i>
-                    </button>
-                    {% if job_request.status != 'Accepted' %}
-                    <button class="btn-edit" onclick="updateStatus('{{ job_request.id }}', 'Accepted')" title="Accept">
-                      <i class="fas fa-check"></i>
-                    </button>
-                    {% endif %}
-                    {% if job_request.status != 'Declined' %}
-                    <button class="btn-delete" onclick="updateStatus('{{ job_request.id }}', 'Declined')" title="Decline">
-                      <i class="fas fa-times"></i>
-                    </button>
-                    {% endif %}
-                  </div>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+      <div class="modal-body" id="modalContent">
+        <div style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin fa-2x"></i> Loading application details...</div>
       </div>
     </div>
   </div>
 
-  <!-- Application Details Modal -->
-  <div class="modal" id="applicationModal">
-    <div class="modal-content">
-      <h2>Application Details</h2>
-      <div class="modal-details" id="applicationDetails">
-        <!-- Details will be loaded here -->
-      </div>
-      <div class="modal-buttons">
-        <button class="modal-btn cancel" onclick="hideApplicationModal()">Close</button>
-      </div>
-    </div>
-  </div>
-
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
   <script>
-    // JavaScript functions for the job requests page
-    function viewApplication(requestId) {
-      fetch(`/admin/job_request/${requestId}`)
-        .then(response => response.json())
-        .then(data => {
-          const detailsDiv = document.getElementById('applicationDetails');
-          detailsDiv.innerHTML = `
-            <div class="detail-row">
-              <div class="detail-label">Applicant:</div>
-              <div class="detail-value">${data.first_name} ${data.last_name}</div>
+    function filterByStatus(status, btn) {
+      document.querySelectorAll('.filter-tab').forEach(b => {
+        b.classList.remove('active', 'btn-primary');
+        b.classList.add('btn-outline');
+      });
+      btn.classList.add('active', 'btn-primary');
+      btn.classList.remove('btn-outline');
+
+      const rows = document.querySelectorAll('#reqTable tbody tr');
+      rows.forEach(r => {
+        const s = r.getAttribute('data-status');
+        if (status === 'all' || s === status) {
+          r.style.display = '';
+        } else {
+          r.style.display = 'none';
+        }
+      });
+    }
+
+    function filterReqTable() {
+      const q = document.getElementById('reqSearch').value.toLowerCase();
+      const rows = document.querySelectorAll('#reqTable tbody tr');
+      rows.forEach(r => {
+        r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    }
+
+    async function viewRequestDetails(reqId) {
+      document.getElementById('modal_req_id').textContent = reqId;
+      document.getElementById('detailsModal').classList.add('active');
+      const container = document.getElementById('modalContent');
+
+      try {
+        const res = await fetch('/admin/job_request/' + reqId);
+        if (res.ok) {
+          const req = await res.json();
+          container.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1.5rem; background: #f8fafc; padding: 1.25rem; border-radius: var(--radius-md); font-size:0.9rem;">
+              <div><strong>Name:</strong> ${req.first_name} ${req.last_name}</div>
+              <div><strong>Register No:</strong> ${req.register_no || 'N/A'}</div>
+              <div><strong>Email:</strong> ${req.email}</div>
+              <div><strong>Mobile:</strong> ${req.mobile_no}</div>
+              <div><strong>Department:</strong> ${req.department || req.qualifying_degree}</div>
+              <div><strong>Qualifying Degree:</strong> ${req.qualifying_degree} (${req.year_of_passing})</div>
+              <div><strong>CGPA:</strong> <span style="color:var(--success); font-weight:800;">${req.cgpa || 'N/A'}</span></div>
+              <div><strong>Standing Backlogs:</strong> ${req.backlogs || 0}</div>
+              <div><strong>10th %:</strong> ${req.tenth_percentage || 'N/A'}%</div>
+              <div><strong>12th / Diploma %:</strong> ${req.twelfth_percentage || 'N/A'}%</div>
+              <div><strong>Preferred Role:</strong> ${req.preferred_role || 'Software Engineer'}</div>
+              <div><strong>District / Pin:</strong> ${req.district} (${req.pin_code})</div>
+              <div style="grid-column: 1 / -1;"><strong>Status:</strong> <span class="status-badge ${req.status.toLowerCase()}">${req.status}</span></div>
             </div>
-            <div class="detail-row">
-              <div class="detail-label">Email:</div>
-              <div class="detail-value">${data.email}</div>
+
+            <h4 style="font-weight: 800; margin-bottom: 0.75rem;"><i class="fas fa-link"></i> Portfolio & Social Profiles</h4>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+              ${req.github_url ? `<a href="${req.github_url}" target="_blank" class="btn btn-outline" style="width:auto; font-size:0.85rem;"><i class="fab fa-github"></i> GitHub Profile</a>` : '<span style="color:var(--text-muted); font-size:0.85rem;">No GitHub linked</span>'}
+              ${req.linkedin_url ? `<a href="${req.linkedin_url}" target="_blank" class="btn btn-outline" style="width:auto; font-size:0.85rem;"><i class="fab fa-linkedin" style="color:#0077b5"></i> LinkedIn Profile</a>` : '<span style="color:var(--text-muted); font-size:0.85rem;">No LinkedIn linked</span>'}
             </div>
-            <div class="detail-row">
-              <div class="detail-label">Mobile:</div>
-              <div class="detail-value">${data.mobile_no}</div>
+
+            <h4 style="font-weight: 800; margin-bottom: 0.75rem;"><i class="fas fa-paperclip"></i> Uploaded Documents</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem;">
+              ${req.resume_path ? `<a href="/uploads/${req.resume_path}" target="_blank" class="btn btn-outline" style="font-size:0.85rem;"><i class="fas fa-file-pdf" style="color:var(--danger)"></i> Resume PDF</a>` : ''}
+              ${req.photo_path ? `<a href="/uploads/${req.photo_path}" target="_blank" class="btn btn-outline" style="font-size:0.85rem;"><i class="fas fa-image" style="color:var(--primary)"></i> Candidate Photo</a>` : ''}
+              ${req.mark_sheet_10th_path ? `<a href="/uploads/${req.mark_sheet_10th_path}" target="_blank" class="btn btn-outline" style="font-size:0.85rem;"><i class="fas fa-file-lines"></i> 10th Marksheet</a>` : ''}
+              ${req.mark_sheet_12th_path ? `<a href="/uploads/${req.mark_sheet_12th_path}" target="_blank" class="btn btn-outline" style="font-size:0.85rem;"><i class="fas fa-file-shield"></i> 12th Marksheet</a>` : ''}
+              ${req.college_mark_sheet_path ? `<a href="/uploads/${req.college_mark_sheet_path}" target="_blank" class="btn btn-outline" style="font-size:0.85rem;"><i class="fas fa-scroll"></i> College Marksheet</a>` : ''}
             </div>
-            <div class="detail-row">
-              <div class="detail-label">Qualification:</div>
-              <div class="detail-value">${data.qualifying_degree} (${data.year_of_passing})</div>
-            </div>
-            <div class="detail-row">
-              <div class="detail-label">Address:</div>
-              <div class="detail-value">${data.district} - ${data.pin_code}</div>
-            </div>
-            <div class="detail-row">
-              <div class="detail-label">Status:</div>
-              <div class="detail-value">
-                ${data.status === 'Pending' ? '<span class="status-badge pending">Pending</span>' : ''}
-                ${data.status === 'Accepted' ? '<span class="status-badge accepted">Accepted</span>' : ''}
-                ${data.status === 'Declined' ? '<span class="status-badge declined">Declined</span>' : ''}
-              </div>
-            </div>
-            <div class="detail-row">
-              <div class="detail-label">Submitted On:</div>
-              <div class="detail-value">${data.submitted_at}</div>
-            </div>
-            <div class="detail-row">
-              <div class="detail-label">Documents:</div>
-              <div class="detail-value document-links">
-                <a href="/uploads/${data.photo_path}" target="_blank">Passport Photo</a>
-                <a href="/uploads/${data.mark_sheet_10th_path}" target="_blank">10th Mark Sheet</a>
-                <a href="/uploads/${data.mark_sheet_12th_path}" target="_blank">12th Mark Sheet</a>
-                <a href="/uploads/${data.resume_path}" target="_blank">Resume</a>
-                <a href="/uploads/${data.college_mark_sheet_path}" target="_blank">College Mark Sheet</a>
-              </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+              <button class="btn btn-danger" style="width:auto;" onclick="updateStatus(${req.id}, 'Declined'); closeDetailsModal();">Decline Application</button>
+              <button class="btn btn-primary" style="width:auto;" onclick="updateStatus(${req.id}, 'Accepted'); closeDetailsModal();">Accept Application</button>
             </div>
           `;
-          showApplicationModal();
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Error loading application details');
-        });
+        }
+      } catch (err) {
+        container.innerHTML = '<div style="color:var(--danger)">Failed to load request details</div>';
+      }
     }
-    
-    function showApplicationModal() {
-      document.getElementById('applicationModal').style.display = 'flex';
+
+    function closeDetailsModal() {
+      document.getElementById('detailsModal').classList.remove('active');
     }
-    
-    function hideApplicationModal() {
-      document.getElementById('applicationModal').style.display = 'none';
-    }
-    
-    function updateStatus(requestId, status) {
-      if (confirm(`Are you sure you want to ${status.toLowerCase()} this application?`)) {
-        fetch(`/admin/job_request/${requestId}`, {
+
+    async function updateStatus(reqId, status) {
+      try {
+        const res = await fetch('/admin/job_request/' + reqId, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ status })
-        })
-        .then(response => response.json())
-        .then(data => {
-          alert(data.message);
-          location.reload();
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Error updating application status');
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: status })
         });
+        if (res.ok) {
+          showToast('Job Application status updated to ' + status, 'success');
+          setTimeout(() => location.reload(), 800);
+        }
+      } catch (err) {
+        showToast('Error updating status', 'error');
       }
     }
   </script>

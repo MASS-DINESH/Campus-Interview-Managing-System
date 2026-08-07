@@ -69,6 +69,15 @@ def init_db():
             year_of_passing INTEGER NOT NULL,
             district TEXT NOT NULL,
             pin_code TEXT NOT NULL,
+            register_no TEXT,
+            department TEXT,
+            cgpa REAL,
+            tenth_percentage REAL,
+            twelfth_percentage REAL,
+            backlogs INTEGER DEFAULT 0,
+            preferred_role TEXT,
+            github_url TEXT,
+            linkedin_url TEXT,
             photo_path TEXT,
             mark_sheet_10th_path TEXT,
             mark_sheet_12th_path TEXT,
@@ -79,6 +88,24 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
     ''')
+
+    # Migration for existing databases
+    for col_def in [
+        ('register_no', 'TEXT'),
+        ('department', 'TEXT'),
+        ('cgpa', 'REAL'),
+        ('tenth_percentage', 'REAL'),
+        ('twelfth_percentage', 'REAL'),
+        ('backlogs', 'INTEGER DEFAULT 0'),
+        ('preferred_role', 'TEXT'),
+        ('github_url', 'TEXT'),
+        ('linkedin_url', 'TEXT')
+    ]:
+        try:
+            conn.execute(f"ALTER TABLE job_requests ADD COLUMN {col_def[0]} {col_def[1]};")
+        except sqlite3.OperationalError:
+            pass  # Column already exists
+
     
     # Create support_tickets table
     conn.execute('''
@@ -319,6 +346,17 @@ def admin_login_details():
 def about():
     return render_template('about.html')
 
+# Drives Catalog Page
+@app.route('/drives')
+def drives():
+    return render_template('drives.html')
+
+# Interview Prep Resources Page
+@app.route('/resources')
+def resources():
+    return render_template('resources.html')
+
+
 # Job request page
 @app.route('/job_request')
 def job_request():
@@ -342,9 +380,20 @@ def submit_job_request():
     district = request.form.get('district', '').strip()
     pin_code = request.form.get('pin_code', '').strip()
     
+    # Additional Candidate Form Fields
+    register_no = request.form.get('register_no', '').strip()
+    department = request.form.get('department', '').strip()
+    cgpa = request.form.get('cgpa', '').strip()
+    tenth_percentage = request.form.get('tenth_percentage', '').strip()
+    twelfth_percentage = request.form.get('twelfth_percentage', '').strip()
+    backlogs = request.form.get('backlogs', '0').strip()
+    preferred_role = request.form.get('preferred_role', '').strip()
+    github_url = request.form.get('github_url', '').strip()
+    linkedin_url = request.form.get('linkedin_url', '').strip()
+
     # Validate required fields
     if not all([first_name, last_name, mobile_no, email, qualifying_degree, year_of_passing, district, pin_code]):
-        return jsonify({'error': 'All fields are required'}), 400
+        return jsonify({'error': 'All core candidate fields are required'}), 400
     
     # Handle file uploads
     photo_path = save_file(request.files.get('photo'))
@@ -355,25 +404,28 @@ def submit_job_request():
     
     # Validate required files
     if not all([photo_path, mark_sheet_10th_path, mark_sheet_12th_path, resume_path, college_mark_sheet_path]):
-        return jsonify({'error': 'All documents are required'}), 400
+        return jsonify({'error': 'All 5 document uploads are required'}), 400
     
     # Save to database
     conn = get_db_connection()
     try:
         conn.execute('''
             INSERT INTO job_requests 
-            (user_id, first_name, last_name, mobile_no, email, qualifying_degree, year_of_passing, district, pin_code, 
+            (user_id, first_name, last_name, mobile_no, email, qualifying_degree, year_of_passing, district, pin_code,
+             register_no, department, cgpa, tenth_percentage, twelfth_percentage, backlogs, preferred_role, github_url, linkedin_url,
              photo_path, mark_sheet_10th_path, mark_sheet_12th_path, resume_path, college_mark_sheet_path)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (session['user_id'], first_name, last_name, mobile_no, email, qualifying_degree, year_of_passing, district, pin_code,
+              register_no, department, cgpa, tenth_percentage, twelfth_percentage, backlogs, preferred_role, github_url, linkedin_url,
               photo_path, mark_sheet_10th_path, mark_sheet_12th_path, resume_path, college_mark_sheet_path))
         
         conn.commit()
         conn.close()
-        return jsonify({'message': 'Job request submitted successfully'}), 200
+        return jsonify({'message': 'Job placement request submitted successfully'}), 200
     except Exception as e:
         conn.close()
         return jsonify({'error': str(e)}), 500
+
 
 def save_file(file):
     if file and file.filename and allowed_file(file.filename):
@@ -539,26 +591,11 @@ def get_job_request_details(request_id):
     conn.close()
     
     if job_request:
-        return jsonify({
-            'id': job_request['id'],
-            'first_name': job_request['first_name'],
-            'last_name': job_request['last_name'],
-            'mobile_no': job_request['mobile_no'],
-            'email': job_request['email'],
-            'qualifying_degree': job_request['qualifying_degree'],
-            'year_of_passing': job_request['year_of_passing'],
-            'district': job_request['district'],
-            'pin_code': job_request['pin_code'],
-            'photo_path': job_request['photo_path'],
-            'mark_sheet_10th_path': job_request['mark_sheet_10th_path'],
-            'mark_sheet_12th_path': job_request['mark_sheet_12th_path'],
-            'resume_path': job_request['resume_path'],
-            'college_mark_sheet_path': job_request['college_mark_sheet_path'],
-            'status': job_request['status'],
-            'submitted_at': job_request['submitted_at']
-        }), 200
+        req_dict = dict(job_request)
+        return jsonify(req_dict), 200
     else:
         return jsonify({'error': 'Job request not found'}), 404
+
 
 # Serve uploaded files
 @app.route('/uploads/<filename>')
@@ -918,4 +955,5 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)

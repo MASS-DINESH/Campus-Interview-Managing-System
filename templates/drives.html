@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Campus Recruitment & Hiring Drives Catalog 2026 - Apply for top tech companies."/>
+  <title>Campus Hiring Drives 2026 | Placement Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <!-- Header Navbar -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="brand-text">Campus<span>Placement</span></div>
+    </a>
+    <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+    <ul class="nav-menu">
+      <li><a href="/" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+      <li><a href="{{ url_for('drives') }}" class="nav-link active"><i class="fas fa-building-columns"></i> Hiring Drives</a></li>
+      <li><a href="{{ url_for('job_request') }}" class="nav-link"><i class="fas fa-paper-plane"></i> Apply Placement</a></li>
+      <li><a href="{{ url_for('resources') }}" class="nav-link"><i class="fas fa-book-open"></i> Prep Resources</a></li>
+      <li><a href="{{ url_for('about') }}" class="nav-link"><i class="fas fa-info-circle"></i> About Drives</a></li>
+      <li><a href="{{ url_for('admin_login') }}" class="nav-link"><i class="fas fa-user-shield"></i> Admin Portal</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Header -->
+  <header style="background: var(--bg-gradient); color: white; padding: 3.5rem 1.5rem; text-align: center;">
+    <div style="max-width: 900px; margin: 0 auto;">
+      <span class="status-badge" style="background: rgba(99, 102, 241, 0.25); color: #a5b4fc; border: 1px solid rgba(255,255,255,0.2); margin-bottom: 1rem;">
+        <i class="fas fa-briefcase"></i> Active Placement Drives Season 2026
+      </span>
+      <h1 style="font-size: var(--font-h1); font-weight: 800; line-height: 1.2; margin-bottom: 0.75rem;">
+        Active Corporate Campus Recruitment Drives
+      </h1>
+      <p style="color: #cbd5e1; font-size: 1.05rem;">
+        Browse upcoming hiring opportunities from top technology companies and submit your application.
+      </p>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <!-- Drives Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+      <!-- Google Drive Card -->
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: #e8f0fe; color: #4285F4; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+              <i class="fab fa-google"></i>
+            </div>
+            <span class="status-badge accepted" style="font-size: 0.75rem;">CTC: ₹24.5 LPA</span>
+          </div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.4rem;">
+            Google Software Engineer & Cloud Specialist
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+            Software Development Engineer role focusing on Distributed Systems, Cloud Computing, and AI/ML infrastructure.
+          </p>
+          <ul style="list-style: none; font-size: 0.85rem; color: var(--text-main); margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 6px;">
+            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Eligibility:</strong> CGPA 8.0+ (CSE / IT / AI&DS)</li>
+            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Backlogs:</strong> 0 Standing Arrears</li>
+            <li><i class="fas fa-location-dot" style="color: var(--primary);"></i> <strong>Location:</strong> Bengaluru / Hyderabad</li>
+          </ul>
+        </div>
+        <a href="{{ url_for('job_request') }}" class="btn btn-primary">Apply For Drive <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <!-- Microsoft Drive Card -->
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: #deecf9; color: #00A4EF; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+              <i class="fab fa-microsoft"></i>
+            </div>
+            <span class="status-badge accepted" style="font-size: 0.75rem;">CTC: ₹21.0 LPA</span>
+          </div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.4rem;">
+            Microsoft Azure & Full-Stack Developer Drive
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+            Engineering roles in Azure Cloud, Security Engineering, and Office 365 Web Services platform development.
+          </p>
+          <ul style="list-style: none; font-size: 0.85rem; color: var(--text-main); margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 6px;">
+            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Eligibility:</strong> CGPA 7.5+ (All Tech Branches)</li>
+            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Backlogs:</strong> Max 1 active backlog allowed</li>
+            <li><i class="fas fa-location-dot" style="color: var(--primary);"></i> <strong>Location:</strong> Hyderabad / Noida</li>
+          </ul>
+        </div>
+        <a href="{{ url_for('job_request') }}" class="btn btn-primary">Apply For Drive <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <!-- Amazon Drive Card -->
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: #fff3e0; color: #FF9900; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+              <i class="fab fa-amazon"></i>
+            </div>
+            <span class="status-badge accepted" style="font-size: 0.75rem;">CTC: ₹19.8 LPA</span>
+          </div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.4rem;">
+            Amazon AWS Systems & SDE Drive 2026
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+            Software Development Engineer-1 and Cloud Solutions Architect roles for e-commerce and AWS services.
+          </p>
+          <ul style="list-style: none; font-size: 0.85rem; color: var(--text-main); margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 6px;">
+            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Eligibility:</strong> CGPA 7.0+</li>
+            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Backlogs:</strong> 0 Standing Arrears</li>
+            <li><i class="fas fa-location-dot" style="color: var(--primary);"></i> <strong>Location:</strong> Chennai / Bengaluru</li>
+          </ul>
+        </div>
+        <a href="{{ url_for('job_request') }}" class="btn btn-primary">Apply For Drive <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <!-- TCS Drive Card -->
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: #fce4ec; color: #ec4899; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+              <i class="fas fa-brain"></i>
+            </div>
+            <span class="status-badge pending" style="font-size: 0.75rem;">CTC: ₹9.0 LPA (Digital)</span>
+          </div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.4rem;">
+            TCS Digital & Ninja National Qualifier Drive
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+            Mass campus recruitment drive for TCS Digital and Ninja cadre roles across software engineering.
+          </p>
+          <ul style="list-style: none; font-size: 0.85rem; color: var(--text-main); margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 6px;">
+            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Eligibility:</strong> CGPA 6.0+ (60% aggregate)</li>
+            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Backlogs:</strong> Max 1 pending backlog</li>
+            <li><i class="fas fa-location-dot" style="color: var(--primary);"></i> <strong>Location:</strong> PAN India</li>
+          </ul>
+        </div>
+        <a href="{{ url_for('job_request') }}" class="btn btn-primary">Apply For Drive <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      &copy; 2026 Campus Interview Management System. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
