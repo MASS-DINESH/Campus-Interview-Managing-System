@@ -148,6 +148,18 @@ def is_recent(date_string, days=7):
     except:
         return False
 
+@app.context_processor
+def inject_global_vars():
+    unread_count = 0
+    if session.get('is_admin'):
+        try:
+            conn = get_db_connection()
+            unread_count = conn.execute('SELECT COUNT(*) FROM support_tickets WHERE is_read = 0').fetchone()[0]
+            conn.close()
+        except Exception:
+            pass
+    return {'unread_count': unread_count}
+
 @app.route('/')
 def index():
     # If already logged in go to profile
@@ -504,12 +516,22 @@ def admin_dashboard():
     # Count unread support tickets
     unread_count = conn.execute('SELECT COUNT(*) FROM support_tickets WHERE is_read = 0').fetchone()[0]
     
+    # Get stats for dashboard
+    total_users = conn.execute('SELECT COUNT(*) FROM users').fetchone()[0]
+    total_jobs = conn.execute('SELECT COUNT(*) FROM job_requests').fetchone()[0]
+    pending_jobs = conn.execute('SELECT COUNT(*) FROM job_requests WHERE status = "Pending"').fetchone()[0]
+    total_companies = conn.execute('SELECT COUNT(DISTINCT email) FROM job_requests').fetchone()[0]
+    
     conn.close()
     
     return render_template('admin.html', 
                          username=session['username'], 
                          users=users,
-                         unread_count=unread_count)
+                         unread_count=unread_count,
+                         total_users=total_users,
+                         total_jobs=total_jobs,
+                         pending_jobs=pending_jobs,
+                         total_companies=total_companies)
 
 # Admin job requests page
 @app.route('/admin/job_requests')

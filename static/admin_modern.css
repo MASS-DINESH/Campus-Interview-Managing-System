@@ -3,13 +3,16 @@
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: #f1f5f9;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
 }
 
 /* Admin Sidebar */
 .admin-sidebar {
   width: 280px;
-  background: #0f172a;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: var(--glass-blur);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   color: white;
   display: flex;
   flex-direction: column;
@@ -17,7 +20,7 @@
   top: 0; bottom: 0; left: 0;
   z-index: 1100;
   transition: var(--transition);
-  box-shadow: 4px 0 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 4px 0 25px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-brand {
@@ -130,12 +133,13 @@
 }
 
 .admin-topbar {
-  background: white;
+  background: rgba(15, 23, 42, 0.2);
+  backdrop-filter: var(--glass-blur);
   padding: 1rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -162,20 +166,23 @@
 }
 
 .stat-card {
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   display: flex;
   align-items: center;
   justify-content: space-between;
   transition: var(--transition);
+  color: white;
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .stat-info h3 {
@@ -212,10 +219,11 @@
 
 /* Section Cards & Tables */
 .admin-card {
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   margin-bottom: 2rem;
   overflow: hidden;
 }
@@ -262,15 +270,18 @@
 }
 
 .modal-card {
-  background: white;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-lg);
   width: 90%;
   max-width: 650px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
   transform: translateY(20px);
   transition: var(--transition);
+  color: white;
 }
 
 .modal-backdrop.active .modal-card {

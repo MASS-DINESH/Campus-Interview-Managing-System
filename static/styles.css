@@ -14,20 +14,23 @@
   --warning-light: #fef3c7;
   --danger: #ef4444;
   --danger-light: #fee2e2;
-  
   /* Neutral Shades */
   --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
   --bg-light: #f8fafc;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
-  --border-color: rgba(226, 232, 240, 0.8);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-light: #cbd5e1;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --primary-light: rgba(99, 102, 241, 0.15);
+  --success-light: rgba(16, 185, 129, 0.15);
+  --warning-light: rgba(245, 158, 11, 0.15);
+  --danger-light: rgba(239, 68, 68, 0.15);
   
   /* Glassmorphism System */
-  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-bg: rgba(15, 23, 42, 0.45);
   --glass-bg-dark: rgba(15, 23, 42, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --glass-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.125);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   --glass-blur: blur(16px);
   
   /* Dynamic Gradients */
@@ -66,7 +69,8 @@ html, body {
 
 body {
   font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-light);
+  background: var(--bg-gradient);
+  background-attachment: fixed;
   color: var(--text-main);
   line-height: 1.6;
   min-height: 100vh;
@@ -96,14 +100,14 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(15, 23, 42, 0.65);
   backdrop-filter: var(--glass-blur);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.85rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
   transition: var(--transition);
   width: 100%;
 }
@@ -115,7 +119,7 @@ body {
   text-decoration: none;
   font-weight: 800;
   font-size: clamp(1.1rem, 2.5vw, 1.35rem);
-  color: var(--text-main);
+  color: white;
   white-space: nowrap;
 }
 
@@ -148,7 +152,7 @@ body {
 
 .nav-link {
   text-decoration: none;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 600;
   font-size: 0.9rem;
   padding: 0.45rem 0.85rem;
@@ -161,8 +165,8 @@ body {
 }
 
 .nav-link:hover, .nav-link.active {
-  color: var(--primary);
-  background: var(--primary-light);
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .mobile-toggle {
@@ -170,7 +174,7 @@ body {
   background: none;
   border: none;
   font-size: 1.4rem;
-  color: var(--text-main);
+  color: white;
   cursor: pointer;
   padding: 0.4rem;
 }
@@ -205,10 +209,12 @@ body {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   min-height: min(700px, 85vh);
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--glass-shadow);
   margin: 1.5rem auto;
   max-width: 1080px;
   width: 100%;
@@ -352,10 +358,10 @@ body {
   padding: 0.8rem 1.1rem 0.8rem 2.8rem;
   font-size: 0.95rem;
   font-family: inherit;
-  border: 1.5px solid var(--border-color);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-md);
-  background: #f8fafc;
-  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
   transition: var(--transition);
   box-sizing: border-box;
 }
@@ -386,13 +392,13 @@ input[type="password"].form-control {
 .form-control:focus {
   outline: none;
   border-color: var(--primary);
-  background: white;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25);
 }
 
 select.form-control {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2064748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   padding-right: 2.5rem;
@@ -428,19 +434,24 @@ select.form-control {
 }
 
 .btn-secondary {
-  background: var(--text-main);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .btn-outline {
   background: transparent;
-  border: 1.5px solid var(--border-color);
-  color: var(--text-main);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .btn-outline:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .btn-danger {
@@ -451,11 +462,11 @@ select.form-control {
 
 /* File Dropzone */
 .file-dropzone {
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-md);
   padding: 1.5rem 1rem;
   text-align: center;
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.02);
   cursor: pointer;
   transition: var(--transition);
   position: relative;
@@ -465,7 +476,7 @@ select.form-control {
 
 .file-dropzone:hover, .file-dropzone.dragover {
   border-color: var(--primary);
-  background: var(--primary-light);
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .dropzone-icon {
@@ -541,9 +552,10 @@ select.form-control {
   width: 100%;
   overflow-x: auto;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
   -webkit-overflow-scrolling: touch;
 }
 
@@ -555,21 +567,21 @@ select.form-control {
 }
 
 .data-table th {
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
   padding: 0.85rem 1rem;
   font-weight: 700;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-muted);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .data-table td {
   padding: 0.85rem 1rem;
   font-size: 0.9rem;
-  border-bottom: 1px solid var(--border-color);
-  color: var(--text-main);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: white;
 }
 
 /* Toast Alerts */
@@ -590,12 +602,15 @@ select.form-control {
   gap: 10px;
   padding: 0.85rem 1.25rem;
   border-radius: var(--radius-md);
-  background: white;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-left: 5px solid var(--primary);
   animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 260px;
   max-width: 400px;
+  color: white;
 }
 
 .toast-alert.success { border-left-color: var(--success); }
@@ -650,12 +665,14 @@ select.form-control {
     left: -100%;
     width: 100%;
     height: calc(100vh - 60px);
-    background: white;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: var(--glass-blur);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     flex-direction: column;
     padding: 1.5rem;
     align-items: stretch;
     transition: var(--transition);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     z-index: 999;
   }
   .nav-menu.active {
